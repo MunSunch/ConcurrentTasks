@@ -49,9 +49,10 @@ public class task1 {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+                    } else {
+                        sizeToFreq.put(countRepeat, sizeToFreq.get(countRepeat) + 1);
+                        sizeToFreq.notify();
                     }
-                    sizeToFreq.put(countRepeat, sizeToFreq.get(countRepeat) + 1);
-                    sizeToFreq.notify();
                 }
             };
             pool.submit(runnable);
