@@ -8,33 +8,41 @@ public class task {
     public static AtomicLong counter2 = new AtomicLong(0);
     public static AtomicLong counter3 = new AtomicLong(0);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         Random random = new Random();
         String[] texts = new String[100_000];
         for (int i = 0; i < texts.length; i++) {
             texts[i] = generateText("abc", 3 + random.nextInt(3));
         }
 
-        new Thread(()->{
+        var thread1 = new Thread(()->{
             for (var word: texts) {
                 if(isConsistsOneLetter(word))
                     counter1.incrementAndGet();
             }
-        }).start();
+        });
 
-        new Thread(()->{
+        var thread2 = new Thread(()->{
             for (var word: texts) {
                 if(isAscendindSequence(word))
                     counter2.incrementAndGet();
             }
-        }).start();
+        });
 
-        new Thread(()->{
+        var thread3 = new Thread(()->{
             for (var word: texts) {
                 if(isPalindrome(word))
                     counter3.incrementAndGet();
             }
-        }).start();
+        });
+
+        thread1.start();
+        thread2.start();
+        thread3.start();
+
+        thread1.join();
+        thread2.join();
+        thread3.join();
 
         System.out.println("Красивых слов с длиной 3: " + counter1 + " шт");
         System.out.println("Красивых слов с длиной 4: " + counter2 + " шт");
