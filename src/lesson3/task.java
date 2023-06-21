@@ -4,9 +4,9 @@ import java.util.Random;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class task {
-    public static AtomicLong counter1 = new AtomicLong(0);
-    public static AtomicLong counter2 = new AtomicLong(0);
     public static AtomicLong counter3 = new AtomicLong(0);
+    public static AtomicLong counter4 = new AtomicLong(0);
+    public static AtomicLong counter5 = new AtomicLong(0);
 
     public static void main(String[] args) throws InterruptedException {
         Random random = new Random();
@@ -18,21 +18,21 @@ public class task {
         var thread1 = new Thread(()->{
             for (var word: texts) {
                 if(isConsistsOneLetter(word))
-                    counter1.incrementAndGet();
+                    incrementCounter(word);
             }
         });
 
         var thread2 = new Thread(()->{
             for (var word: texts) {
                 if(isAscendindSequence(word))
-                    counter2.incrementAndGet();
+                    incrementCounter(word);
             }
         });
 
         var thread3 = new Thread(()->{
             for (var word: texts) {
                 if(isPalindrome(word))
-                    counter3.incrementAndGet();
+                    incrementCounter(word);
             }
         });
 
@@ -44,9 +44,19 @@ public class task {
         thread2.join();
         thread3.join();
 
-        System.out.println("Красивых слов с длиной 3: " + counter1 + " шт");
-        System.out.println("Красивых слов с длиной 4: " + counter2 + " шт");
-        System.out.println("Красивых слов с длиной 5: " + counter3 + " шт");
+        System.out.println("Красивых слов с длиной 3: " + counter3 + " шт");
+        System.out.println("Красивых слов с длиной 4: " + counter4 + " шт");
+        System.out.println("Красивых слов с длиной 5: " + counter5 + " шт");
+    }
+
+    private static void incrementCounter(String word) {
+        if(word.length() == 3) {
+            counter3.incrementAndGet();
+        } else if(word.length() == 4) {
+            counter4.incrementAndGet();
+        } else if(word.length() == 5) {
+            counter5.incrementAndGet();
+        }
     }
 
     private static boolean isPalindrome(String word) {
