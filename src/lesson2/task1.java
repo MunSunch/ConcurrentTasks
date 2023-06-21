@@ -9,33 +9,6 @@ public class task1 {
 
     public static void main(String[] args) throws InterruptedException {
         int countThread = 1000;
-
-        Runnable countingMaxThread = () -> {
-            while(!Thread.interrupted()) {
-                synchronized (sizeToFreq) {
-                    try {
-                        sizeToFreq.wait();
-                    } catch (InterruptedException e) {
-                        System.out.println("Count max thread close...");
-                        return;
-                    }
-
-                    Map.Entry<Integer, Integer> maxEntry = new AbstractMap.SimpleEntry<>(0,0);
-                    for(var entry: sizeToFreq.entrySet()) {
-                        if(entry.getValue() > maxEntry.getValue()) {
-                            maxEntry = entry;
-                        }
-                    }
-                    System.out.println("Count max thread: "+maxEntry.getKey()+" ("+maxEntry.getValue()+" раз)");
-
-                    sizeToFreq.notify();
-                }
-            }
-        };
-        Thread countingThread = new Thread(countingMaxThread);
-        countingThread.start();
-
-
         var pool = Executors.newFixedThreadPool(countThread);
         for (int i = 0; i < countThread; i++) {
             Runnable runnable = () -> {
@@ -58,7 +31,6 @@ public class task1 {
             pool.submit(runnable);
         }
         pool.shutdown();
-        countingThread.interrupt();
 
         var list = sizeToFreq.entrySet().stream()
                 .sorted((e1,e2)->e2.getValue()-e1.getValue())
